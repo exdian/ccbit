@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="字符指针.c" />
+    <ClCompile Include="指针和数组.c" />
     <ClCompile Include="整型存储.c" />
     <ClCompile Include="浮点存储.c" />
   </ItemGroup>
