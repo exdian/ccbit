@@ -3,6 +3,7 @@
 
 void test_char_ptr()
 {
+	printf("\n字符指针\n");
 	const char* cp = "abcd"; // 把字符串首字符'a'的地址赋给了指针变量 cp，这里的字符串是常量不能修改
 	printf("%s\n", cp);
 	printf("%d\n", (int)strlen(cp));

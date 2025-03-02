@@ -2,6 +2,8 @@
 
 int main()
 {
+	test_function_ptr();
+
 	test_arr_ptr();
 
 	test_ptr_arr();

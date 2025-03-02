@@ -7,3 +7,4 @@ bool chk_endian();
 void test_char_ptr();
 void test_ptr_arr();
 void test_arr_ptr();
+void test_function_ptr();

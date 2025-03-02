@@ -30,6 +30,9 @@
     <ClCompile Include="指针和数组.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="函数指针.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="练习.h">
