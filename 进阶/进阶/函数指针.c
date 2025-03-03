@@ -1,5 +1,6 @@
 // 函数指针是指针变量，用来存放函数的地址
 // 函数指针数组就是把函数指针放在数组中
+// 如果把函数指针作为参数传递给另一个函数，当这个指针被用来调用其所指向的函数时，称为回调函数
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
@@ -16,6 +17,7 @@ static int mul(int a, int b) { return a * b; }
 static int div(int a, int b) { return a / b; }
 static int mod(int a, int b) { return a % b; }
 
+// 函数指针
 void test_function_ptr()
 {
 	printf("\n函数指针\n");
@@ -51,6 +53,7 @@ void test_function_ptr()
 			int a = 0;
 			int b = 0;
 			scanf("%d %d", &a, &b);
+			inp -= 1;
 			printf("%d\n", pf[inp](a, b));
 		}
 
