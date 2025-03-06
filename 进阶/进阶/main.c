@@ -2,6 +2,8 @@
 
 int main()
 {
+	test_string_function();
+
 	test_sort();
 
 	test_function_ptr();

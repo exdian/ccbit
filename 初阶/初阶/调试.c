@@ -25,3 +25,16 @@ void string_copy(char* dest, const char* src)
 	assert(dest != NULL);
 	while (*dest++ = *src++);
 }
+
+// ×Ö·û´®³¤¶È
+size_t string_length(const char* ptr)
+{
+	assert(ptr != NULL);
+	const char* base = ptr;
+	while (*ptr)
+	{
+		ptr += 1;
+	}
+
+	return ptr - base;
+}

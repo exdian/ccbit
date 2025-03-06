@@ -21,7 +21,9 @@ void test_sort()
 	}
 
 	void bubble_sort(void* ptr, int num, int width, int (*pf)(const void*, const void*));
+	void select_sort(void* ptr, int num, int width, int (*pf)(const void*, const void*));
 	bubble_sort(arr, length, sizeof(arr[0]), compare_int);
+	select_sort(arr, length, sizeof(arr[0]), compare_int);
 	for (int i = 0; i < length; i++)
 	{
 		printf("%d ", arr[i]);
@@ -66,4 +68,22 @@ static void swap(char* elem1, char* elem2, int width)
 		*(elem2 + i) = temp;
 	}
 	
+}
+
+// Ñ¡ÔñÅÅÐò
+void select_sort(void* ptr, int num, int width, int (*pf)(const void*, const void*))
+{
+	for (int i = 0; i < num - 1; i++)
+	{
+		for (int j = i + 1; j < num; j++)
+		{
+			if (pf((char*)ptr + i * width, (char*)ptr + j * width) > 0)
+			{
+				swap((char*)ptr + i * width, (char*)ptr + j * width, width);
+			}
+
+		}
+
+	}
+
 }

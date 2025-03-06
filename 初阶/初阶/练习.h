@@ -21,3 +21,4 @@ void test_struct();
 void string_copy(char* dest, const char* src);
 void game_chess3();
 void game_mine();
+size_t string_length(const char* ptr);

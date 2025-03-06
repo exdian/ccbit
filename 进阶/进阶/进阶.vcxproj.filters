@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\练习">
+      <UniqueIdentifier>{fead2f2a-2d58-49c8-a0a6-c1eaf08f8b9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="整型存储.c">
@@ -34,7 +37,10 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="排序函数.c">
-      <Filter>源文件</Filter>
+      <Filter>源文件\练习</Filter>
+    </ClCompile>
+    <ClCompile Include="字符串函数.c">
+      <Filter>源文件\练习</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
