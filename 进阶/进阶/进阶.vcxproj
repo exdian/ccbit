@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="内存函数.c" />
     <ClCompile Include="函数指针.c" />
     <ClCompile Include="字符串函数.c" />
     <ClCompile Include="字符指针.c" />

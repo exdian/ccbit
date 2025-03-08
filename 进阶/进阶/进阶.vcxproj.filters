@@ -42,6 +42,9 @@
     <ClCompile Include="字符串函数.c">
       <Filter>源文件\练习</Filter>
     </ClCompile>
+    <ClCompile Include="内存函数.c">
+      <Filter>源文件\练习</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="练习.h">

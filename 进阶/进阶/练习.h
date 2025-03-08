@@ -16,4 +16,6 @@ int string_compare(const char* str1, const char* str2);
 char* string_num_copy(char* dest, const char* src, int num);
 char* string_num_concat(char* dest, const char* str, int num);
 int string_num_compare(const char* str1, const char* str2, int num);
+char* string_find(const char* str1, const char* str2); 
 void test_string_function();
+void* memory_copy(void* dest, const void* src, size_t num);
