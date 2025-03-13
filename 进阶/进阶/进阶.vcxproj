@@ -28,6 +28,7 @@
     <ClCompile Include="排序函数.c" />
     <ClCompile Include="整型存储.c" />
     <ClCompile Include="浮点存储.c" />
+    <ClCompile Include="结构体.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="练习.h" />
