@@ -29,9 +29,11 @@
     <ClCompile Include="整型存储.c" />
     <ClCompile Include="浮点存储.c" />
     <ClCompile Include="结构体.c" />
+    <ClCompile Include="联系人.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="练习.h" />
+    <ClInclude Include="联系人.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

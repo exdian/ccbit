@@ -2,6 +2,8 @@
 
 int main()
 {
+	test_contact();
+	return 0;
 	test_string_function();
 	test_sort();
 	test_function_ptr();
