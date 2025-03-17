@@ -2,41 +2,27 @@
 
 void test_contact()
 {
-	contact con;
-	init_contact(&con);
+	contact con; // 创建列表
+	init_contact(&con); // 初始化列表
+	void (*func[])(contact*) = { add_contact, rmv_contact, mod_contact, scr_contact, lst_contact, sor_contact }; // 函数指针数组
 	int inp = 0;
 	do
 	{
 		menu(con.count);
 		scanf(" %d", &inp);
 		getchar();
-		switch (inp)
+		if (inp >= 1 && inp <= sizeof(func) / sizeof(func[0])) // 1~6
 		{
-		default:
+			func[inp - 1](&con);
+		}
+		else if (0 == inp)
+		{
+			printf("已退出\n");
+		}
+		else
+		{
 			printf("选择错误，请重试\n");
 			getchar();
-			break;
-		case 0:
-			printf("已退出\n");
-			break;
-		case 1:
-			add_contact(&con);
-			break;
-		case 2:
-			rmv_contact(&con);
-			break;
-		case 3:
-			mod_contact(&con);
-			break;
-		case 4:
-			scr_contact(&con);
-			break;
-		case 5:
-			lst_contact(&con);
-			break;
-		case 6:
-			sor_contact(&con);
-			break;
 		}
 
 	} while (inp != 0);
@@ -248,12 +234,80 @@ static void sor_contact(contact* pc)
 		return;
 	}
 
-	qsort(pc->list, pc->count, sizeof(pc->list[0]), sort_name);
-	printf("排序完成\n\n");
+	static const char* rk[] = { "姓名", "地址", "电话", "备注" };
+	static const char* ck[] = { "升序", "降序" };
+	static int (*sort_func[][2])(const void*, const void*) = { sort_name_asc, sort_name_desc,
+																sort_addr_asc, sort_addr_desc,
+																sort_tele_asc, sort_tele_desc,
+																sort_note_asc, sort_note_desc };
+	int row = 0;
+	int col = 0;
+	printf("====  1.姓名  2.地址  3.电话  4.备注  ====\n");
+	printf("请选择排序方式:> ");
+	scanf(" %d", &row);
+	if ((row < 1) || (row > sizeof(sort_func) / sizeof(sort_func[0]))) // 防止函数指针数组越界
+	{
+		printf("选择错误，取消排序\n\n");
+		return;
+	}
+
+	printf("===========  1.升序   2.降序  ===========\n");
+	printf("请选择排序方式:> ");
+	scanf(" %d", &col);
+	if (col < 1 || col > 2) // 防止函数指针数组越界
+	{
+		printf("选择错误，取消排序\n\n");
+		return;
+	}
+
+	qsort(pc->list, pc->count, sizeof(pc->list[0]), sort_func[row - 1][col - 1]);
+	printf("%s%s排序完成\n\n", rk[row - 1], ck[col - 1]);
 }
 
 // 名字升序
-static int sort_name(const void* elem1, const void* elem2)
+static int sort_name_asc(const void* elem1, const void* elem2)
 {
 	return strcmp(((struct contact_list*)elem1)->name, ((struct contact_list*)elem2)->name);
+}
+
+// 名字降序
+static int sort_name_desc(const void* elem1, const void* elem2)
+{
+	return strcmp(((struct contact_list*)elem2)->name, ((struct contact_list*)elem1)->name);
+}
+
+// 地址升序
+static int sort_addr_asc(const void* elem1, const void* elem2)
+{
+	return strcmp(((struct contact_list*)elem1)->addr, ((struct contact_list*)elem2)->addr);
+}
+
+// 地址降序
+static int sort_addr_desc(const void* elem1, const void* elem2)
+{
+	return strcmp(((struct contact_list*)elem2)->addr, ((struct contact_list*)elem1)->addr);
+}
+
+// 电话升序
+static int sort_tele_asc(const void* elem1, const void* elem2)
+{
+	return strcmp(((struct contact_list*)elem1)->tele, ((struct contact_list*)elem2)->tele);
+}
+
+// 电话降序
+static int sort_tele_desc(const void* elem1, const void* elem2)
+{
+	return strcmp(((struct contact_list*)elem2)->tele, ((struct contact_list*)elem1)->tele);
+}
+
+// 备注升序
+static int sort_note_asc(const void* elem1, const void* elem2)
+{
+	return strcmp(((struct contact_list*)elem1)->note, ((struct contact_list*)elem2)->note);
+}
+
+// 备注降序
+static int sort_note_desc(const void* elem1, const void* elem2)
+{
+	return strcmp(((struct contact_list*)elem2)->note, ((struct contact_list*)elem1)->note);
 }
