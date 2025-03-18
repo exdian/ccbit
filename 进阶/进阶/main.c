@@ -2,6 +2,8 @@
 
 int main()
 {
+	test_union();
+	test_enum();
 	test_contact();
 	test_string_function();
 	test_sort();

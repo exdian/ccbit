@@ -23,3 +23,5 @@ void* memory_move(void* dest, const void* src, size_t num);
 int memory_compare(const void* ptr1, const void* ptr2, size_t num);
 void* memory_set(void* ptr, int value, size_t num);
 void test_contact();
+void test_enum();
+void test_union();

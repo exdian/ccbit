@@ -27,8 +27,10 @@
     <ClCompile Include="指针和数组.c" />
     <ClCompile Include="排序函数.c" />
     <ClCompile Include="整型存储.c" />
+    <ClCompile Include="枚举.c" />
     <ClCompile Include="浮点存储.c" />
     <ClCompile Include="结构体.c" />
+    <ClCompile Include="联合类型.c" />
     <ClCompile Include="联系人.c" />
   </ItemGroup>
   <ItemGroup>
