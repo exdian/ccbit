@@ -57,6 +57,12 @@
     <ClCompile Include="联合类型.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="动态内存管理.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="柔性数组.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="练习.h">

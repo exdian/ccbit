@@ -2,6 +2,8 @@
 
 int main()
 {
+	test_softarr();
+	test_alloc();
 	test_union();
 	test_enum();
 	test_contact();

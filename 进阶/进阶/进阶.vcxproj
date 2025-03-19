@@ -22,12 +22,14 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="内存函数.c" />
     <ClCompile Include="函数指针.c" />
+    <ClCompile Include="动态内存管理.c" />
     <ClCompile Include="字符串函数.c" />
     <ClCompile Include="字符指针.c" />
     <ClCompile Include="指针和数组.c" />
     <ClCompile Include="排序函数.c" />
     <ClCompile Include="整型存储.c" />
     <ClCompile Include="枚举.c" />
+    <ClCompile Include="柔性数组.c" />
     <ClCompile Include="浮点存储.c" />
     <ClCompile Include="结构体.c" />
     <ClCompile Include="联合类型.c" />

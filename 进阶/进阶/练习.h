@@ -25,3 +25,5 @@ void* memory_set(void* ptr, int value, size_t num);
 void test_contact();
 void test_enum();
 void test_union();
+void test_alloc();
+void test_softarr();
