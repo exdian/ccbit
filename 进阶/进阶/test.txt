@@ -1,0 +1,2 @@
+name 12 1.500000
+name:s.name age:11 score:5.500000

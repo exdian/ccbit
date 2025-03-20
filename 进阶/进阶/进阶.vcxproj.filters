@@ -63,6 +63,9 @@
     <ClCompile Include="柔性数组.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="文件操作.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="练习.h">

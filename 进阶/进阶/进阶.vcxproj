@@ -28,6 +28,7 @@
     <ClCompile Include="指针和数组.c" />
     <ClCompile Include="排序函数.c" />
     <ClCompile Include="整型存储.c" />
+    <ClCompile Include="文件操作.c" />
     <ClCompile Include="枚举.c" />
     <ClCompile Include="柔性数组.c" />
     <ClCompile Include="浮点存储.c" />

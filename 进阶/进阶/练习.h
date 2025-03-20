@@ -27,3 +27,4 @@ void test_enum();
 void test_union();
 void test_alloc();
 void test_softarr();
+void test_file();
