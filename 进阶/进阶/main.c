@@ -2,6 +2,7 @@
 
 int main()
 {
+	test_pre();
 	test_file();
 	test_softarr();
 	test_alloc();

@@ -28,3 +28,4 @@ void test_union();
 void test_alloc();
 void test_softarr();
 void test_file();
+void test_pre();
