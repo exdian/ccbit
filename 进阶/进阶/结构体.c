@@ -95,3 +95,10 @@ static struct emp
 	int c : 7;
 	int d : 18;
 } s4 = { 0, 0, 0, 0 };
+
+#include <stdio.h>
+#define OFFSETOF(STRUCT, MEMBER) ((size_t)&((STRUCT*)0)->MEMBER) // Ä£ÄâÊµÏÖ offsetof
+void test_offsetof()
+{
+	printf("%llu ", OFFSETOF(struct node3, next));
+}

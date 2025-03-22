@@ -34,11 +34,20 @@
 // 如果一个指针指向动态开辟内存，不要轻易改变该指针的值
 // 动态开辟的内存一定要正确释放
 // 连续的内存有益于减少内存碎片，也有益于提高访问速度，因此尽量不要频繁地申请内存
+// 
+// 数组和结构体无论是放在栈区还是堆区，其内部的元素或者成员地址均是从低到高排列
 
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+struct s
+{
+	int a;
+	int b;
+};
+
 void test_alloc()
 {
 	printf("\n动态内存管理\n");
@@ -57,7 +66,18 @@ void test_alloc()
 		ptr = NULL;
 	}
 
-	printf("%s\n", strerror(errno)); // 查看错误信息
+	printf("realloc: %s\n", strerror(errno)); // 查看错误信息
 	free(p); // 释放内存
 	p = NULL; // 规避野指针
+	struct s s0 = { 0 };
+	struct s* ps = (struct s*)malloc(sizeof(struct s));
+	perror("malloc");
+	if (NULL == ps)
+	{
+		return;
+	}
+
+	printf("栈区的结构体\n第一个成员地址%p\n第二个成员地址%p\n\n堆区的结构体\n第一个成员地址%p\n第二个成员地址%p\n	", &s0.a, &s0.b, &ps->a, &ps->b);
+	free(ps);
+	ps = NULL;
 }
