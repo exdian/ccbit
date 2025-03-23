@@ -11,8 +11,9 @@ void test_contact()
 		return;
 	}
 
-	void (*func[])(size_t*, contact**, contact**) = { add_contact, rmv_contact, mod_contact, scr_contact, lst_contact, sor_contact }; // 函数指针数组
-	int inp = 0;
+	void (*func[])(size_t*, contact**, contact**) = { add_contact, rmv_contact, mod_contact,
+	                                                  scr_contact, lst_contact, sor_contact }; // 函数指针数组
+	int inp = -1;
 	do
 	{
 		menu(count);
@@ -73,7 +74,7 @@ static contact* init_contact(size_t* count, contact** start)
 	perror("打开文件");
 	if (NULL == pfile)
 	{
-		return last; // 如果文件不存在则返回空指针
+		return last; // 如果文件不存在则返回第一个节点
 	}
 
 	while (1 == fread(&node->data, sizeof(node->data), 1, pfile)) // 当成功读取到完整的数据时进入循环
@@ -90,7 +91,7 @@ static contact* init_contact(size_t* count, contact** start)
 		last->next = node; // 当下一个节点创建成功时将地址赋给上一个节点
 	}
 
-	if (*count > 0) // 这个 if 块和下一个相关联
+	if (*count > 0)
 	{
 		free(node); // 最后一个节点必定没有数据，free 后 last->next 是野指针
 		node = NULL;
@@ -100,16 +101,11 @@ static contact* init_contact(size_t* count, contact** start)
 	if (0 == feof(pfile)) // 当读取结束时检查是否是遇到了文件末尾
 	{
 		printf("读取失败\n");
-		while (NULL != (node = (*start)->next))
-		{
-			free(*start); // 释放第一个节点
-			*start = node; // 下一个节点作为第一个节点
-		}
-
-		free(*start);
+		free_contact(*start);
 		*start = NULL;
 		*count = 0;
 		last = NULL;
+		node = NULL;
 	}
 
 	fclose(pfile);
@@ -147,7 +143,7 @@ static void show_contact(const contact* start, const contact* end)
 			-(MAX_NAME + 1), start->data.name, -(MAX_ARRD + 1), start->data.addr,
 			-(MAX_TELE + 1), start->data.tele, -(MAX_NOTE + 1), start->data.note);
 		start = start->next;
-	} while (start == end->next);
+	} while (start != end->next);
 
 }
 
@@ -167,12 +163,36 @@ static int save_contact(size_t count, const contact* start)
 		return 0;
 	}
 
-	// 写入文件
+	do // 写入文件
+	{
+		if (1 != fwrite(&start->data, sizeof(start->data), 1, pfile))
+		{
+			fclose(pfile);
+			pfile = NULL;
+			return CONTINUE;
+		}
 
-	return CONTINUE;
+		start = start->next;
+	} while (start != NULL);
+
+	fclose(pfile); // 运行到这里说明成功写入所有数据
+	pfile = NULL;
+	return 0;
 }
 
-static int quit_contact(size_t count, const contact* start)
+static void free_contact(contact* start)
+{
+	assert(start != NULL);
+	while (start != NULL)
+	{
+		contact* node = start->next;
+		free(start); // 释放第一个节点
+		start = node; // 下一个节点作为第一个节点
+	}
+
+}
+
+static int quit_contact(size_t count, contact* start)
 {
 	assert(start != NULL);
 	if (flag)
@@ -186,8 +206,7 @@ static int quit_contact(size_t count, const contact* start)
 			if (0 == save_contact(count, start))
 			{
 				printf("保存成功\n");
-				// 释放内存
-
+				free_contact(start); // 释放内存
 			}
 			else
 			{
@@ -204,7 +223,7 @@ static int quit_contact(size_t count, const contact* start)
 
 	}
 
-	printf("已退出\n"); // inp == 2 才会运行到这里
+	printf("已退出\n");
 	return 0;
 }
 
@@ -270,13 +289,22 @@ static void rmv_contact(size_t* count, contact** start, contact** end)
 
 	if(*count > 1) // 如果只有 1 个数据则不进入
 	{
-		link.last->next = link.node->next;
+		if (NULL == link.last) // 如果删除的是第一个节点则进入
+		{
+			*start = link.node->next;
+		}
+		else
+		{
+			link.last->next = link.node->next;
+		}
+
 		if (NULL == link.node->next) // 如果删除的是最后一个节点则进入
 		{
 			*end = link.last;
 		}
 
 		free(link.node);
+		link.node = NULL;
 	}
 
 	*count -= 1;

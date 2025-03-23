@@ -2,6 +2,7 @@
 
 int main()
 {
+	test_contact();
 	test_offsetof();
 	test_pre();
 	test_file();
@@ -9,7 +10,6 @@ int main()
 	test_alloc();
 	test_union();
 	test_enum();
-	test_contact();
 	test_string_function();
 	test_sort();
 	test_function_ptr();
