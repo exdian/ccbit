@@ -1,4 +1,10 @@
 #pragma once
+/*
+待完成：
+写入文件
+释放内存
+排序
+*/
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
 #include <string.h>
@@ -9,6 +15,7 @@
 #define MAX_ARRD 24
 #define MAX_TELE 12
 #define MAX_NOTE 36
+#define CONTINUE 1
 
 struct contact_list
 {
@@ -34,6 +41,8 @@ static void menu(size_t count);
 static contact* init_contact(size_t* count, contact** start);
 static struct link find_contact(const contact* start, const char* str);
 static void show_contact(const contact* start, const contact* end);
+static int save_contact(size_t count, const contact* start);
+static int quit_contact(size_t count, const contact* start);
 static void add_contact(size_t* count, contact** start, contact** end);
 static void rmv_contact(size_t* count, contact** start, contact** end);
 static void mod_contact(size_t* count, contact** start, contact** end);

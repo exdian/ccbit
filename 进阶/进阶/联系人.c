@@ -1,5 +1,5 @@
 #include "联系人.h"
-
+static int flag = 0;
 void test_contact()
 {
 	size_t count = 0;
@@ -25,7 +25,7 @@ void test_contact()
 		}
 		else if (0 == inp)
 		{
-			printf("已退出\n");
+			inp = quit_contact(count, start); // 检查是否有更改
 		}
 		else
 		{
@@ -126,11 +126,11 @@ static struct link find_contact(const contact* start, const char* str)
 		if ((strstr(start->data.name, str) != NULL) || (strstr(start->data.tele, str) != NULL) ||
 			(strstr(start->data.note, str) != NULL) || (strstr(start->data.addr, str) != NULL))
 		{
-			link.node = start;
+			link.node = (contact*)start;
 			return link; // 如果找到返回下标
 		}
 
-		link.last = start; // 假设下一个节点就是要找的数据，记录上一个节点
+		link.last = (contact*)start; // 假设下一个节点就是要找的数据，记录上一个节点
 		start = start->next; // 下一个节点
 	} while (start != NULL);
 
@@ -149,6 +149,63 @@ static void show_contact(const contact* start, const contact* end)
 		start = start->next;
 	} while (start == end->next);
 
+}
+
+static int save_contact(size_t count, const contact* start)
+{
+	assert(start != NULL);
+	FILE* pfile = fopen("contact.bin", "wb");
+	if (NULL == pfile)
+	{
+		return CONTINUE; // 返回非零时程序继续运行
+	}
+
+	if (count <= 0) // 如果删除所有数据则清空文件
+	{
+		fclose(pfile);
+		pfile = NULL;
+		return 0;
+	}
+
+	// 写入文件
+
+	return CONTINUE;
+}
+
+static int quit_contact(size_t count, const contact* start)
+{
+	assert(start != NULL);
+	if (flag)
+	{
+		printf("=====  1.保存    2.不保存    3.取消  =====\n");
+		printf("是否保存更改？\n");
+		int inp = 3;
+		scanf(" %d", &inp);
+		if (1 == inp)
+		{
+			if (0 == save_contact(count, start))
+			{
+				printf("保存成功\n");
+				// 释放内存
+
+			}
+			else
+			{
+				printf("保存失败，请重试\n");
+				getchar();
+				return CONTINUE; // 返回非零时程序继续运行
+			}
+
+		}
+		else if (3 == inp)
+		{
+			return CONTINUE; // 返回非零时程序继续运行
+		}
+
+	}
+
+	printf("已退出\n"); // inp == 2 才会运行到这里
+	return 0;
 }
 
 static void add_contact(size_t* count, contact** start, contact** end)
@@ -178,6 +235,7 @@ static void add_contact(size_t* count, contact** start, contact** end)
 	printf("备注:> ");
 	scanf("%s", node->data.note);
 	*count += 1;
+	flag = 1;
 	printf("添加成功\n\n");
 }
 
@@ -222,6 +280,7 @@ static void rmv_contact(size_t* count, contact** start, contact** end)
 	}
 
 	*count -= 1;
+	flag = 1;
 	printf("删除成功\n\n");
 }
 
@@ -263,6 +322,7 @@ static void mod_contact(size_t* count, contact** start, contact** end)
 	scanf("%s", node->data.tele);
 	printf("修改备注:> ");
 	scanf("%s", node->data.note);
+	flag = 1;
 	printf("修改成功\n\n");
 }
 
@@ -340,6 +400,7 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 
 	// 排序
 
+	flag = 1;
 	printf("%s%s排序完成\n\n", rk[row - 1], ck[col - 1]);
 }
 
