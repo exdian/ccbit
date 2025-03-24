@@ -216,8 +216,9 @@ static int quit_contact(size_t count, contact* start)
 			}
 
 		}
-		else if (3 == inp)
+		else if (2 != inp) // 输入不是 1 也不是 2 时继续运行
 		{
+			printf("\n");
 			return CONTINUE; // 返回非零时程序继续运行
 		}
 
@@ -425,11 +426,83 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 		printf("选择错误，取消排序\n\n");
 		return;
 	}
-
+	
 	// 排序
+	void* ret = sort_linklist(start, *count, offsetof(contact, next), sort_func[row - 1][col - 1]); // offset == 96
+	if (NULL == ret)
+	{
+		printf("无需排序\n\n");
+		return;
+	}
 
+	*end = ret;
 	flag = 1;
 	printf("%s%s排序完成\n\n", rk[row - 1], ck[col - 1]);
+}
+
+// 单向链表冒泡排序。返回值是链表的结尾，同时修改链表的开头
+void* sort_linklist(void** start, size_t node_num, size_t next_ptr_offset, int (*pfunc)(const void* elem1, const void* elem2))
+{
+	assert(start != NULL);
+	void* next = *(void**)((char*)*start + next_ptr_offset); // 获取下一节点的指针
+	if (NULL == next) // 如果传进来只有一个节点则退出
+	{
+		return *start; // 返回空指针代表是有序的
+	}
+
+	void* last = NULL;
+	void* ret = NULL;
+	for (size_t i = 1; i < node_num; i++)
+	{
+		int flag = 0;
+		void* node = *start; // 从头开始
+		next = *(void**)((char*)*start + next_ptr_offset); // (char*)node + next_ptr_offset 得到下一个节点指针的地址，所以是一个二级指针
+		for (size_t j = 0; j < node_num - i; j++)
+		{
+			if (NULL == next) // 当发现链表数据个数小于计数变量时修改计数变量为实际值
+			{
+				node_num = j + 1;
+				break;
+			}
+
+			if (pfunc(node, next) > 0) // 如果返回 > 1 则交换两个元素
+			{
+				*(void**)((char*)node + next_ptr_offset) = *(void**)((char*)next + next_ptr_offset);
+				*(void**)((char*)next + next_ptr_offset) = node;
+				if (0 == j)
+				{
+					*start = next; // 如果链表第一个数据发生变化
+				}
+				else
+				{
+					*(void**)((char*)last + next_ptr_offset) = next;
+				}
+
+				flag = 1;
+				last = next;
+			}
+			else
+			{
+				last = node;
+				node = next;
+			}
+
+			next = *(void**)((char*)node + next_ptr_offset); // 获取下一节点的指针
+		}
+
+		if (i == 1) // 链表最后一个数据
+		{
+			ret = node;
+		}
+
+		if (0 == flag) // 如果一轮冒泡排序下来没有数据发生交换那么就是有序的
+		{
+			return ret;
+		}
+
+	}
+
+	return ret;
 }
 
 // 名字升序
