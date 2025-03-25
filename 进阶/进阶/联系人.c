@@ -218,7 +218,7 @@ static int quit_contact(size_t count, contact* start)
 		}
 		else if (2 != inp) // 输入不是 1 也不是 2 时继续运行
 		{
-			printf("\n");
+			printf("取消\n\n");
 			return CONTINUE; // 返回非零时程序继续运行
 		}
 
@@ -232,7 +232,7 @@ static void add_contact(size_t* count, contact** start, contact** end)
 {
 	assert(count && start && end);
 	contact* node = *end;
-	if (*count > 0)
+	if (*count > 0) // 始终会保留链表头
 	{
 		node = malloc(sizeof(contact));
 		if (NULL == node)
@@ -405,8 +405,8 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 	static const char* ck[] = { "升序", "降序" };
 	static int (*sort_func[][2])(const void*, const void*) = { sort_name_asc, sort_name_desc,
 	                                                           sort_addr_asc, sort_addr_desc,
-															   sort_tele_asc, sort_tele_desc,
-															   sort_note_asc, sort_note_desc };
+	                                                           sort_tele_asc, sort_tele_desc,
+	                                                           sort_note_asc, sort_note_desc };
 	int row = 0;
 	int col = 0;
 	printf("====  1.姓名  2.地址  3.电话  4.备注  ====\n");
@@ -427,15 +427,7 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 		return;
 	}
 	
-	// 排序
-	void* ret = sort_linklist(start, *count, offsetof(contact, next), sort_func[row - 1][col - 1]); // offset == 96
-	if (NULL == ret)
-	{
-		printf("无需排序\n\n");
-		return;
-	}
-
-	*end = ret;
+	*end = sort_linklist(start, *count, offsetof(contact, next), sort_func[row - 1][col - 1]); // offset == 96
 	flag = 1;
 	printf("%s%s排序完成\n\n", rk[row - 1], ck[col - 1]);
 }
@@ -444,10 +436,11 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 void* sort_linklist(void** start, size_t node_num, size_t next_ptr_offset, int (*pfunc)(const void* elem1, const void* elem2))
 {
 	assert(start != NULL);
-	void* next = *(void**)((char*)*start + next_ptr_offset); // 获取下一节点的指针
-	if (NULL == next) // 如果传进来只有一个节点则退出
+	//void* next = (void*)*((char*)*start + next_ptr_offset); // error
+	void* next = *(void**)((char*)*start + next_ptr_offset); // (char*)node + next_ptr_offset 得到下一个节点指针的地址，所以是一个二级指针
+	if (NULL == next) // 如果传进来只有一个节点则直接返回
 	{
-		return *start; // 返回空指针代表是有序的
+		return *start;
 	}
 
 	void* last = NULL;
@@ -456,7 +449,7 @@ void* sort_linklist(void** start, size_t node_num, size_t next_ptr_offset, int (
 	{
 		int flag = 0;
 		void* node = *start; // 从头开始
-		next = *(void**)((char*)*start + next_ptr_offset); // (char*)node + next_ptr_offset 得到下一个节点指针的地址，所以是一个二级指针
+		next = *(void**)((char*)*start + next_ptr_offset); // 获取下一节点的指针
 		for (size_t j = 0; j < node_num - i; j++)
 		{
 			if (NULL == next) // 当发现链表数据个数小于计数变量时修改计数变量为实际值
@@ -490,7 +483,7 @@ void* sort_linklist(void** start, size_t node_num, size_t next_ptr_offset, int (
 			next = *(void**)((char*)node + next_ptr_offset); // 获取下一节点的指针
 		}
 
-		if (i == 1) // 链表最后一个数据
+		if (1 == i) // 链表最后一个数据
 		{
 			ret = node;
 		}

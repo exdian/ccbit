@@ -30,4 +30,4 @@ void test_softarr();
 void test_file();
 void test_pre();
 void test_offsetof();
-void* sort_linklist(void* start, size_t node_num, size_t next_ptr_offset, int (*pfunc)(const void* elem1, const void* elem2));
+void* sort_linklist(void** start, size_t node_num, size_t next_ptr_offset, int (*pfunc)(const void* elem1, const void* elem2));
