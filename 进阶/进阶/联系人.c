@@ -135,15 +135,30 @@ static struct link find_contact(const contact* start, const char* str)
 
 static void show_contact(const contact* start, const contact* end)
 {
-	assert(start && end);
+	assert(start != NULL);
 	printf("%*s%*s%*s%*s\n", -(MAX_NAME + 1), "姓名", -(MAX_ARRD + 1), "地址", -(MAX_TELE + 1), "电话", -(MAX_NOTE + 1), "备注");
-	do
+	if (NULL == end) // 当 end == NULL 时打印到结尾
 	{
-		printf("%*s%*s%*s%*s\n",
-			-(MAX_NAME + 1), start->data.name, -(MAX_ARRD + 1), start->data.addr,
-			-(MAX_TELE + 1), start->data.tele, -(MAX_NOTE + 1), start->data.note);
-		start = start->next;
-	} while (start != end->next);
+		do
+		{
+			printf("%*s%*s%*s%*s\n",
+				-(MAX_NAME + 1), start->data.name, -(MAX_ARRD + 1), start->data.addr,
+				-(MAX_TELE + 1), start->data.tele, -(MAX_NOTE + 1), start->data.note);
+			start = start->next;
+		} while (start != NULL);
+
+	}
+	else // 打印到 end
+	{
+		do
+		{
+			printf("%*s%*s%*s%*s\n",
+				-(MAX_NAME + 1), start->data.name, -(MAX_ARRD + 1), start->data.addr,
+				-(MAX_TELE + 1), start->data.tele, -(MAX_NOTE + 1), start->data.note);
+			start = start->next;
+		} while (start != end->next);
+
+	}
 
 }
 
@@ -288,7 +303,7 @@ static void rmv_contact(size_t* count, contact** start, contact** end)
 		return;
 	}
 
-	if(*count > 1) // 如果只有 1 个数据则不进入
+	if (*count > 1) // 如果只有 1 个数据则不进入
 	{
 		if (NULL == link.last) // 如果删除的是第一个节点则进入
 		{
@@ -388,7 +403,7 @@ static void lst_contact(size_t* count, contact** start, contact** end)
 		return;
 	}
 
-	show_contact(*start, *end);
+	show_contact(*start, NULL);
 	printf("\n");
 }
 
@@ -427,13 +442,13 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 		return;
 	}
 	
-	*end = sort_linklist(start, *count, offsetof(contact, next), sort_func[row - 1][col - 1]); // offset == 96
+	*end = sort_linklist(start, offsetof(contact, next), sort_func[row - 1][col - 1]); // offset == 96
 	flag = 1;
 	printf("%s%s排序完成\n\n", rk[row - 1], ck[col - 1]);
 }
 
 // 单向链表冒泡排序。返回值是链表的结尾，同时修改链表的开头
-void* sort_linklist(void** start, size_t node_num, size_t next_ptr_offset, int (*pfunc)(const void* elem1, const void* elem2))
+void* sort_linklist(void** start, size_t next_ptr_offset, int (*pfunc)(const void* elem1, const void* elem2))
 {
 	assert(start != NULL);
 	//void* next = (void*)*((char*)*start + next_ptr_offset); // error
@@ -445,6 +460,7 @@ void* sort_linklist(void** start, size_t node_num, size_t next_ptr_offset, int (
 
 	void* last = NULL;
 	void* ret = NULL;
+	size_t node_num = (size_t)-1; // 如果 node_num 作为函数参数那么可以指定链表区间排序
 	for (size_t i = 1; i < node_num; i++)
 	{
 		int flag = 0;

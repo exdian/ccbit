@@ -44,7 +44,7 @@ static void mod_contact(size_t* count, contact** start, contact** end);
 static void scr_contact(size_t* count, contact** start, contact** end);
 static void lst_contact(size_t* count, contact** start, contact** end);
 static void sor_contact(size_t* count, contact** start, contact** end);
-void* sort_linklist(void** start, size_t node_num, size_t next_ptr_offset, int (*pfunc)(const void* elem1, const void* elem2));
+void* sort_linklist(void** start, size_t next_ptr_offset, int (*pfunc)(const void* elem1, const void* elem2));
 static int sort_name_asc(const void* elem1, const void* elem2);
 static int sort_name_desc(const void* elem1, const void* elem2);
 static int sort_addr_asc(const void* elem1, const void* elem2);
