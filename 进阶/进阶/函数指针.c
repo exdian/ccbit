@@ -14,7 +14,7 @@ static int test(char a, int b)
 static int add(int a, int b) { return a + b; }
 static int sub(int a, int b) { return a - b; }
 static int mul(int a, int b) { return a * b; }
-static int div(int a, int b) { return a / b; }
+static int Div(int a, int b) { return a / b; }
 static int mod(int a, int b) { return a % b; }
 
 // 函数指针
@@ -42,7 +42,7 @@ void test_function_ptr()
 	// 
 	// 在相同参数相同返回类型的函数较多的情况下，可以使用函数指针数组灵活调用，能优化很多冗余代码
 	{ // 函数指针数组例子
-		int (*pf[])(int, int) = { add, sub, mul, div, mod }; // pf 是数组名，每个元素的类型是 int (*)(int, int)
+		int (*pf[])(int, int) = { add, sub, mul, Div, mod }; // pf 是数组名，每个元素的类型是 int (*)(int, int)
 		int length = sizeof(pf) / sizeof(pf[0]);
 		printf("1. add\t\t2. sub\n3. mul\t\t4. div\n5. mod\n");
 		int inp = 0;
@@ -60,11 +60,11 @@ void test_function_ptr()
 	}
 
 	{ // 函数指针数组指针
-		int (*pf[])(int, int) = { add, sub, mul, div, mod };
+		int (*pf[])(int, int) = { add, sub, mul, Div, mod };
 		int (*(*ppf)[5])(int, int) = &pf; // ppf 是指针变量，指向的是指针数组，指向的数组有 5 个元素，每个元素的类型是 int (*)(int, int)
 
 		typedef int (*pf_t)(int, int); // 可以使用 typedef 简化写法，可读性更好
-		pf_t pf0[] = {add, sub, mul, div, mod}; // pf0 是数组名，每个元素的类型是 pf_t
+		pf_t pf0[] = {add, sub, mul, Div, mod}; // pf0 是数组名，每个元素的类型是 pf_t
 		pf_t (*ppf0)[5] = &pf0; // ppf0 是指针变量，指向的是 5 个元素的数组，数组中每个元素的类型是 pf_t
 	}
 	

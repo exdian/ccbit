@@ -3,6 +3,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+typedef struct Node
+{
+	size_t data;
+	struct Node* next;
+} Node;
+
 bool chk_endian();
 void test_char_ptr();
 void test_ptr_arr();
@@ -31,3 +37,5 @@ void test_file();
 void test_pre();
 void test_offsetof();
 void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* elem1, const void* elem2));
+Node* mergeSort(Node* head);
+void test_linklist();

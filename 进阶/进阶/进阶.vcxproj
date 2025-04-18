@@ -32,6 +32,7 @@
     <ClCompile Include="枚举.c" />
     <ClCompile Include="柔性数组.c" />
     <ClCompile Include="浮点存储.c" />
+    <ClCompile Include="链表排序.c" />
     <ClCompile Include="预处理.c" />
     <ClCompile Include="结构体.c" />
     <ClCompile Include="联合类型.c" />

@@ -2,6 +2,7 @@
 
 int main()
 {
+	test_linklist();
 	test_contact();
 	test_offsetof();
 	test_pre();

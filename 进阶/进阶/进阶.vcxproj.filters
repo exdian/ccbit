@@ -69,6 +69,9 @@
     <ClCompile Include="预处理.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="链表排序.c">
+      <Filter>源文件\练习</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="练习.h">
