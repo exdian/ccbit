@@ -9,7 +9,7 @@ typedef struct Node
 	struct Node* next;
 } Node;
 
-// 合并两个有序链表。经过实验，这种写法在 debug 版本只能处理大约 8040 个节点，超过会导致栈溢出，在 release 版本能处理大约 42900 个节点
+// 合并两个有序链表。经过实验，x64 平台下这种写法在 debug 版本只能处理大约 8040 个节点，超过会导致栈溢出，在 release 版本能处理大约 42900 个节点
 static Node* merge(Node* l1, Node* l2)
 {
 	if (NULL == l1)

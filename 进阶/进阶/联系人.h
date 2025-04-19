@@ -9,7 +9,7 @@
 #define MAX_ARRD 24
 #define MAX_TELE 12
 #define MAX_NOTE 36
-#define CONTINUE 1
+#define CONTINUE (-1)
 
 struct contact_list
 {

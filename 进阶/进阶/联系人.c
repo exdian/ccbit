@@ -1,5 +1,5 @@
 #include "联系人.h"
-static int flag = 0;
+static int isChanged = 0;
 void test_contact()
 {
 	size_t count = 0;
@@ -13,13 +13,18 @@ void test_contact()
 
 	void (*func[])(size_t*, contact**, contact**) = { add_contact, rmv_contact, mod_contact,
 	                                                  scr_contact, lst_contact, sor_contact }; // 函数指针数组
-	int inp = -1;
+	int inp = CONTINUE;
 	do
 	{
 		menu(count);
 		fflush(stdin);
-		scanf(" %d", &inp);
-		fflush(stdin);
+		if (scanf(" %d", &inp) != 1)
+		{
+			inp = CONTINUE;
+		}
+
+		while (getchar() != '\n')
+			;
 		if (inp >= 1 && inp <= sizeof(func) / sizeof(func[0])) // 1~6
 		{
 			func[inp - 1](&count, &start, &end);
@@ -31,11 +36,19 @@ void test_contact()
 		else
 		{
 			printf("选择错误，请重试\n");
-			getchar();
+			while (getchar() != '\n')
+				;
 		}
 
 	} while (inp != 0);
 	
+	free_contact(start); // 释放内存
+	count = 0;
+	start = NULL;
+	end = NULL;
+	printf("已退出\n");
+	while (getchar() != '\n')
+		;
 }
 
 static void menu(size_t count)
@@ -63,7 +76,8 @@ static contact* init_contact(size_t* count, contact** start)
 	{
 		fflush(stdin);
 		printf("初始化失败，按 Enter 键重试");
-		getchar();
+		while (getchar() != '\n')
+			;
 	}
 
 	*start = node; // 创建了第一个节点
@@ -85,7 +99,8 @@ static contact* init_contact(size_t* count, contact** start)
 		{
 			fflush(stdin);
 			printf("初始化失败，按 Enter 键重试");
-			getchar();
+			while (getchar() != '\n')
+				;
 		}
 
 		last->next = node; // 当下一个节点创建成功时将地址赋给上一个节点
@@ -210,23 +225,25 @@ static void free_contact(contact* start)
 static int quit_contact(size_t count, contact* start)
 {
 	assert(start != NULL);
-	if (flag)
+	if (isChanged)
 	{
 		printf("=====  1.保存    2.不保存    3.取消  =====\n");
 		printf("是否保存更改？\n");
 		int inp = 3;
 		scanf(" %d", &inp);
+		while (getchar() != '\n')
+			;
 		if (1 == inp)
 		{
 			if (0 == save_contact(count, start))
 			{
 				printf("保存成功\n");
-				free_contact(start); // 释放内存
 			}
 			else
 			{
 				printf("保存失败，请重试\n");
-				getchar();
+				while (getchar() != '\n')
+					;
 				return CONTINUE; // 返回非零时程序继续运行
 			}
 
@@ -239,8 +256,7 @@ static int quit_contact(size_t count, contact* start)
 
 	}
 
-	printf("已退出\n");
-	return 0;
+	return 0; // 保存成功时也运行到这
 }
 
 static void add_contact(size_t* count, contact** start, contact** end)
@@ -263,14 +279,22 @@ static void add_contact(size_t* count, contact** start, contact** end)
 
 	printf("添加联系人\n姓名:> ");
 	scanf("%s", node->data.name); // 传递 char 数组名
+	while (getchar() != '\n')
+		;
 	printf("地址:> ");
 	scanf("%s", node->data.addr);
+	while (getchar() != '\n')
+		;
 	printf("电话:> ");
 	scanf("%s", node->data.tele);
+	while (getchar() != '\n')
+		;
 	printf("备注:> ");
 	scanf("%s", node->data.note);
+	while (getchar() != '\n')
+		;
 	*count += 1;
-	flag = 1;
+	isChanged = 1;
 	printf("添加成功\n\n");
 }
 
@@ -286,6 +310,8 @@ static void rmv_contact(size_t* count, contact** start, contact** end)
 	printf("删除联系人\n请输入要删除的任意关键字:> ");
 	char keyw[MAX_NOTE] = { 0 };
 	scanf("%s", keyw);
+	while (getchar() != '\n')
+		;
 	struct link link = find_contact(*start, keyw); // link.last->next == link.node
 	if (NULL == link.node)
 	{
@@ -297,6 +323,8 @@ static void rmv_contact(size_t* count, contact** start, contact** end)
 	show_contact(link.node, link.node);
 	printf("输入 1 确认删除，其他输入则取消\n");
 	scanf(" %c", keyw);
+	while (getchar() != '\n')
+		;
 	if (keyw[0] != '1')
 	{
 		printf("取消删除\n\n");
@@ -324,7 +352,7 @@ static void rmv_contact(size_t* count, contact** start, contact** end)
 	}
 
 	*count -= 1;
-	flag = 1;
+	isChanged = 1;
 	printf("删除成功\n\n");
 }
 
@@ -340,6 +368,8 @@ static void mod_contact(size_t* count, contact** start, contact** end)
 	printf("修改联系人\n请输入要修改的任意关键字:> ");
 	char keyw[MAX_NOTE] = { 0 };
 	scanf("%s", keyw);
+	while (getchar() != '\n')
+		;
 	struct link link = find_contact(*start, keyw);
 	contact* node = link.node;
 	if (NULL == node)
@@ -352,6 +382,8 @@ static void mod_contact(size_t* count, contact** start, contact** end)
 	show_contact(node, node);
 	printf("输入 1 确认修改，其他输入则取消\n");
 	scanf(" %c", keyw);
+	while (getchar() != '\n')
+		;
 	if (keyw[0] != '1')
 	{
 		printf("取消修改\n\n");
@@ -360,13 +392,21 @@ static void mod_contact(size_t* count, contact** start, contact** end)
 
 	printf("修改姓名:> ");
 	scanf("%s", node->data.name);
+	while (getchar() != '\n')
+		;
 	printf("修改地址:> ");
 	scanf("%s", node->data.addr);
+	while (getchar() != '\n')
+		;
 	printf("修改电话:> ");
 	scanf("%s", node->data.tele);
+	while (getchar() != '\n')
+		;
 	printf("修改备注:> ");
 	scanf("%s", node->data.note);
-	flag = 1;
+	while (getchar() != '\n')
+		;
+	isChanged = 1;
 	printf("修改成功\n\n");
 }
 
@@ -382,6 +422,8 @@ static void scr_contact(size_t* count, contact** start, contact** end)
 	printf("查找联系人\n请输入要查找的任意关键字:> ");
 	char keyw[MAX_NOTE] = { 0 };
 	scanf("%s", keyw);
+	while (getchar() != '\n')
+		;
 	struct link link = find_contact(*start, keyw);
 	if (NULL == link.node)
 	{
@@ -427,6 +469,8 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 	printf("====  1.姓名  2.地址  3.电话  4.备注  ====\n");
 	printf("请选择排序方式:> ");
 	scanf(" %d", &row);
+	while (getchar() != '\n')
+		;
 	if ((row < 1) || (row > sizeof(sort_func) / sizeof(sort_func[0]))) // 防止函数指针数组越界
 	{
 		printf("选择错误，取消排序\n\n");
@@ -436,6 +480,8 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 	printf("===========  1.升序   2.降序  ===========\n");
 	printf("请选择排序方式:> ");
 	scanf(" %d", &col);
+	while (getchar() != '\n')
+		;
 	if (col < 1 || col > 2) // 防止函数指针数组越界
 	{
 		printf("选择错误，取消排序\n\n");
@@ -443,11 +489,11 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 	}
 	
 	*end = sort_linklist(start, offsetof(contact, next), sort_func[row - 1][col - 1]); // offset == 96
-	flag = 1;
+	isChanged = 1;
 	printf("%s%s排序完成\n\n", rk[row - 1], ck[col - 1]);
 }
 
-// 单向链表归并排序。返回值是链表的结尾，同时修改链表的开头
+// 任意链表归并排序。返回值是链表的结尾，同时修改链表的开头
 void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* elem1, const void* elem2))
 {
 	if (NULL == head)
@@ -461,20 +507,20 @@ void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* 
 	}
 
 	// 快慢指针找到中点。运行到这里说明至少有 2 个节点
-	void* slow = *head;
-	void* fast = *(void**)((char*)*head + offsetof_next); // (char*)node + offsetof_next 得到下一个节点指针的地址，所以强制类型转换二级指针
-	while (fast != NULL && *(void**)((char*)fast + offsetof_next) != NULL) // 当只有 2 个节点时不进入
+	void* left = *head;
+	void* right = *(void**)((char*)*head + offsetof_next); // (char*)node + offsetof_next 得到下一个节点指针的地址，所以强制类型转换二级指针
+	while (right != NULL && *(void**)((char*)right + offsetof_next) != NULL) // 当只有 2 个节点时不进入
 	{
-		slow = *(void**)((char*)slow + offsetof_next);
-		fast = *(void**)((char*)fast + offsetof_next);
-		fast = *(void**)((char*)fast + offsetof_next);
+		left = *(void**)((char*)left + offsetof_next);
+		right = *(void**)((char*)right + offsetof_next);
+		right = *(void**)((char*)right + offsetof_next);
 	}
 
-	void* right = *(void**)((char*)slow + offsetof_next);
-	*(void**)((char*)slow + offsetof_next) = NULL; // 切断链表
+	right = *(void**)((char*)left + offsetof_next);
+	*(void**)((char*)left + offsetof_next) = NULL; // 切断链表
 	sort_linklist(head, offsetof_next, pfunc); // 递归层次最深为 log2(node_count)，向上取整。
 	sort_linklist(&right, offsetof_next, pfunc);
-	void* left = *head;
+	left = *head;
 	// left 和 right 在此时不可能为 NULL
 	void* cur = NULL;
 	if (pfunc(left, right) > 0)
