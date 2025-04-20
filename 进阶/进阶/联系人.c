@@ -508,7 +508,7 @@ void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* 
 
 	// 快慢指针找到中点。运行到这里说明至少有 2 个节点
 	void* left = *head;
-	void* right = *(void**)((char*)*head + offsetof_next); // (char*)node + offsetof_next 得到下一个节点指针的地址，所以强制类型转换二级指针
+	void* right = *(void**)((char*)*head + offsetof_next); // (char*)node + offsetof_next 得到下一个节点指针变量的地址，所以强制类型转换二级指针
 	while (right != NULL && *(void**)((char*)right + offsetof_next) != NULL) // 当只有 2 个节点时不进入
 	{
 		left = *(void**)((char*)left + offsetof_next);
@@ -521,7 +521,45 @@ void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* 
 	sort_linklist(head, offsetof_next, pfunc); // 递归层次最深为 log2(node_count)，向上取整。
 	sort_linklist(&right, offsetof_next, pfunc);
 	left = *head;
-	// left 和 right 在此时不可能为 NULL
+	/*
+	此时 left 和 right 不可能为 NULL，
+	因此这里将循环的第一次展开反而性能更优，能少一次 left != NULL && right != NULL 计算，也能省去 dummy 变量，减小函数栈帧
+	void* dummy = NULL;
+	void* cur = &dummy;
+	while (left != NULL && right != NULL)
+	{
+		if (pfunc(left, right) > 0)
+		{
+			*(void**)cur = right; // 修改 cur 指向的地址空间
+			cur = (void*)((char*)right + offsetof_next); // 获取下一个节点的地址
+			right = *(void**)cur;
+		}
+		else
+		{
+			*(void**)cur = left;
+			cur = (void*)((char*)left + offsetof_next);
+			left = *(void**)cur;
+		}
+
+	}
+
+	*head = dummy;
+	while (left != NULL)
+	{
+		*(void**)cur = left;
+		cur = (void*)((char*)left + offsetof_next);
+		left = *(void**)cur;
+	}
+
+	while (right != NULL)
+	{
+		*(void**)cur = right;
+		cur = (void*)((char*)right + offsetof_next);
+		right = *(void**)cur;
+	}
+
+	return (void*)((char*)cur - offsetof_next);
+	*/
 	void* cur = NULL;
 	if (pfunc(left, right) > 0)
 	{
@@ -552,18 +590,24 @@ void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* 
 
 	}
 
-	while (left != NULL)
+	if (left != NULL)
 	{
 		*(void**)((char*)cur + offsetof_next) = left;
-		cur = left;
-		left = *(void**)((char*)left + offsetof_next);
 	}
-
-	while (right != NULL)
+	else
 	{
 		*(void**)((char*)cur + offsetof_next) = right;
-		cur = right;
-		right = *(void**)((char*)right + offsetof_next);
+	}
+
+	while (1) // 找到链表尾
+	{
+		void* temp = *(void**)((char*)cur + offsetof_next);
+		if (NULL == temp)
+		{
+			break;
+		}
+
+		cur = temp;
 	}
 
 	return cur;

@@ -61,21 +61,22 @@ Node* mergeSort(Node* head)
 	return merge(slow, fast); // 节点较多时会栈溢出
 	
 	// 改进版本，将递归展开
-	Node* ret = NULL;
-	Node* cur = NULL;
-	if (slow->data > fast->data) // 运行到这里 left 和 right 肯定为有序链表
-	{
-		cur = slow;
-		slow = slow->next;
-	}
-	else
-	{
-		cur = fast;
-		fast = fast->next;
-	}
-
-	ret = cur; // 确定表头
-	while (slow != NULL && fast != NULL)
+	Node ret = { 0 };
+	Node* cur = &ret;
+	//Node* ret = NULL;
+	//if (slow->data > fast->data) // 运行到这里 left 和 right 肯定为有序链表
+	//{
+	//	cur = slow;
+	//	slow = slow->next;
+	//}
+	//else
+	//{
+	//	cur = fast;
+	//	fast = fast->next;
+	//}
+	// 
+	//ret = cur; // 确定表头
+	while (slow != NULL && fast != NULL) // 运行到这里 left 和 right 肯定为有序链表
 	{
 		if (slow->data > fast->data)
 		{
@@ -105,7 +106,7 @@ Node* mergeSort(Node* head)
 		fast = fast->next;
 	}
 
-	return ret;
+	return ret.next;
 }
 
 // 测试是否栈溢出
@@ -128,6 +129,11 @@ void test_linklist()
 		{
 			while (getchar() != '\n');
 			printf("输入节点数:> ");
+		}
+
+		if (0 == node_num)
+		{
+			break;
 		}
 
 		while (getchar() != '\n'); // 清空缓冲区
