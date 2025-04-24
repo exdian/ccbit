@@ -544,21 +544,28 @@ void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* 
 	}
 
 	*head = dummy;
-	while (left != NULL)
+	if (left != NULL)
 	{
 		*(void**)cur = left;
-		cur = (void*)((char*)left + offsetof_next);
-		left = *(void**)cur;
 	}
-
-	while (right != NULL)
+	else
 	{
 		*(void**)cur = right;
-		cur = (void*)((char*)right + offsetof_next);
-		right = *(void**)cur;
 	}
 
-	return (void*)((char*)cur - offsetof_next);
+	cur = *(void**)cur;
+	while (1)
+	{
+		void* temp = *(void**)((char*)cur + offsetof_next);
+		if (NULL == temp)
+		{
+			break;
+		}
+
+		cur = temp;
+	}
+
+	return cur;
 	*/
 	void* cur = NULL;
 	if (pfunc(left, right) > 0)
