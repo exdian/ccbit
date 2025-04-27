@@ -496,28 +496,29 @@ static void sor_contact(size_t* count, contact** start, contact** end)
 // 任意链表归并排序。返回值是链表的结尾，同时修改链表的开头
 void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* elem1, const void* elem2))
 {
+#define NEXT(ptr, offset) (*(void**)((char*)(ptr) + (offset))) // 封装，提高可读性
 	if (NULL == head)
 	{
 		return NULL;
 	}
 
-	if (NULL == *head || NULL == *(void**)((char*)*head + offsetof_next))
+	if (NULL == *head || NULL == NEXT(*head, offsetof_next))
 	{
 		return *head;
 	}
 
 	// 快慢指针找到中点。运行到这里说明至少有 2 个节点
 	void* left = *head;
-	void* right = *(void**)((char*)*head + offsetof_next); // (char*)node + offsetof_next 得到下一个节点指针变量的地址，所以强制类型转换二级指针
-	while (right != NULL && *(void**)((char*)right + offsetof_next) != NULL) // 当只有 2 个节点时不进入
+	void* right = NEXT(*head, offsetof_next); // (char*)node + offsetof_next 得到下一个节点指针变量的地址，所以强制类型转换二级指针
+	while (right != NULL && NEXT(right, offsetof_next) != NULL) // 当只有 2 个节点时不进入
 	{
-		left = *(void**)((char*)left + offsetof_next);
-		right = *(void**)((char*)right + offsetof_next);
-		right = *(void**)((char*)right + offsetof_next);
+		left = NEXT(left, offsetof_next);
+		right = NEXT(right, offsetof_next);
+		right = NEXT(right, offsetof_next);
 	}
 
-	right = *(void**)((char*)left + offsetof_next);
-	*(void**)((char*)left + offsetof_next) = NULL; // 切断链表
+	right = NEXT(left, offsetof_next);
+	NEXT(left, offsetof_next) = NULL; // 切断链表
 	sort_linklist(head, offsetof_next, pfunc); // 递归层次最深为 log2(node_count)，向上取整。
 	sort_linklist(&right, offsetof_next, pfunc);
 	left = *head;
@@ -556,7 +557,7 @@ void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* 
 	cur = *(void**)cur;
 	while (1)
 	{
-		void* temp = *(void**)((char*)cur + offsetof_next);
+		void* temp = NEXT(cur, offsetof_next);
 		if (NULL == temp)
 		{
 			break;
@@ -571,12 +572,12 @@ void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* 
 	if (pfunc(left, right) > 0)
 	{
 		cur = right;
-		right = *(void**)((char*)right + offsetof_next);
+		right = NEXT(right, offsetof_next);
 	}
 	else
 	{
 		cur = left;
-		left = *(void**)((char*)left + offsetof_next);
+		left = NEXT(left, offsetof_next);
 	}
 
 	*head = cur; // 修改了链表头，只有第一次递归到最深层的那个分支修改的才是真正的 *head，其余分支都是修改了局部变量 right
@@ -584,31 +585,31 @@ void* sort_linklist(void** head, size_t offsetof_next, int (*pfunc)(const void* 
 	{
 		if (pfunc(left, right) > 0)
 		{
-			*(void**)((char*)cur + offsetof_next) = right;
+			NEXT(cur, offsetof_next) = right;
 			cur = right;
-			right = *(void**)((char*)right + offsetof_next);
+			right = NEXT(right, offsetof_next);
 		}
 		else
 		{
-			*(void**)((char*)cur + offsetof_next) = left;
+			NEXT(cur, offsetof_next) = left;
 			cur = left;
-			left = *(void**)((char*)left + offsetof_next);
+			left = NEXT(left, offsetof_next);
 		}
 
 	}
 
 	if (left != NULL)
 	{
-		*(void**)((char*)cur + offsetof_next) = left;
+		NEXT(cur, offsetof_next) = left;
 	}
 	else
 	{
-		*(void**)((char*)cur + offsetof_next) = right;
+		NEXT(cur, offsetof_next) = right;
 	}
 
 	while (1) // 找到链表尾
 	{
-		void* temp = *(void**)((char*)cur + offsetof_next);
+		void* temp = NEXT(cur, offsetof_next);
 		if (NULL == temp)
 		{
 			break;
